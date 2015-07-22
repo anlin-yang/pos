@@ -1,42 +1,44 @@
-function final_console(inputs) {
-    var result = '***<没钱赚商店>收据***\n';
-    var sum = 0;
-    for(var i = 0; i < inputs.length; i++){
-        sum += inputs[i].price * inputs[i].count;
-        result += '名称：' + inputs[i].name + '，数量：' + inputs[i].count + inputs[i].unit + '，单价：'+
-        inputs[i].price.toFixed(2) + '(元)，小计：' +   (inputs[i].count*inputs[i].price).toFixed(2) +'(元)\n';
-
-    }
-    result += '----------------------\n总计：' + sum.toFixed(2) + '(元)\n**********************';
-    console.log(result);
+function printReceipt(inputs) {
+  var resultInputs = [];
+  resultInputs = getFilterInputs(inputs, resultInputs);
+  resultInputs = mergeInputs(resultInputs);
+  printBills(resultInputs);
 }
 
-function same_inputs(inputs) {
-  var inputs_count = {};
-  var result = [];
-  for ( var i = 0; i < inputs.length; i++) {
-    inputs_count[inputs[i]] = inputs_count[inputs[i]] + 1 || 1;
-  }
-
-  for (var val in inputs_count) {
-    result.push({barcode: val, count: inputs_count[val]});
+function getFilterInputs(inputs, result) {
+  var tempInputs = {};
+  inputs.forEach(function(val) {
+    tempInputs[val] = tempInputs[val] + 1 || 1;
+  });
+  for (var item in tempInputs) {
+    result.push( {barcode: item, count: tempInputs[item]} );
   }
   return result;
 }
 
-function printReceipt(inputs) {
-  var inputs_count = same_inputs(inputs);
-  var all_item = loadAllItems();
-  var car_item = all_item.filter(function(val){
-    for (var i = 0; i < inputs_count.length; i++) {
-      if (inputs_count[i].barcode === val.barcode) {
-        return true;
-      }
+function mergeInputs(result) {
+  var allItems = loadAllItems();
+  result.forEach(function(val) {
+    var existItems = allItems.filter(function(item) {
+      return item.barcode === val.barcode;
+    });
+    if (existItems.length !== 0) {
+      val["name"] = existItems[0].name;
+      val["unit"] = existItems[0].unit;
+      val["price"] = existItems[0].price;
     }
   });
+  return result;
+}
 
-  for (var i = 0; i < car_item.length; i++) {
-    car_item[i].count = inputs_count[i].count;
-  }
-  final_console(car_item);
+function printBills(inputs) {
+  var result = '***<没钱赚商店>收据***\n';
+  var sum = 0;
+  inputs.forEach(function(val) {
+    sum += val.price * val.count;
+    result += '名称：' + val.name + '，数量：' + val.count + val.unit + '，单价：' +
+      val.price.toFixed(2) + '(元)，小计：' + (val.count * val.price).toFixed(2) + '(元)\n';
+  });
+  result += '----------------------\n总计：' + sum.toFixed(2) + '(元)\n**********************';
+  console.log(result);
 }
