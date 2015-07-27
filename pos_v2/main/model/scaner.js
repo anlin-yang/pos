@@ -1,8 +1,6 @@
-function Scaner() {}
+function Scaner() {} // 此处也为空属性的类，但为其扩展性考虑，还是不要写成静态对象的方法，不像DateTime可以改为静态对象的方式。
 
 Scaner.prototype.scan = function(inputs, cart) {
-  var result = {};
-
   inputs.forEach(function(val) {
     var count = 1;
     var barcode = val;
@@ -10,10 +8,6 @@ Scaner.prototype.scan = function(inputs, cart) {
       count = parseInt(val.slice(val.indexOf('-') + 1));
       barcode = val.slice(0, val.indexOf('-'));
     }
-    result[barcode] = (result[barcode] + count) || count;
+    cart.addItem(barcode, count);
   });
-
-  for (var item in result) {
-    cart.addItem(item, result[item]);
-  }
 };

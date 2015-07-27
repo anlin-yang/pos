@@ -3,8 +3,16 @@ function Cart() {
 }
 
 Cart.prototype.addItem = function(barcode, count) {
-  var cartItem = new CartItem(barcode, count);
-  this.cartItems.push(cartItem);
+  var tempItem = this.cartItems.filter(function(val) {
+    return val.barcode === barcode;
+  });
+
+  if (tempItem.length !== 0) {
+    tempItem[0].count += count;
+  } else {
+    var cartItem = new CartItem(barcode, count);
+    this.cartItems.push(cartItem);
+  }
 };
 
 Cart.prototype.getSubtotalPrice = function() {
