@@ -2,12 +2,8 @@ function Scaner() {} // 此处也为空属性的类，但为其扩展性考虑�
 
 Scaner.prototype.scan = function(inputs, cart) {
   inputs.forEach(function(val) {
-    var count = 1;
-    var barcode = val;
-    if (/[\-]/.test(val)) {
-      count = parseInt(val.slice(val.indexOf('-') + 1));
-      barcode = val.slice(0, val.indexOf('-'));
-    }
+    var barcode = val.split('-')[0];
+    var count = val.split('-')[1] || 1;
     cart.addItem(barcode, count);
   });
 };
