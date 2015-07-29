@@ -18,3 +18,5 @@ function loadPromotions() {
     ])
   ];
 }
+
+html5 

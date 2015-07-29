@@ -2,8 +2,9 @@ function Pos() {}
 
 Pos.prototype.printBills = function(cart) {
   var billInputs = cart.cartItems;
+  var dateTime = new DateTime();
   var result = '***<没钱赚商店>收据***\n';
-     result += '打印时间：' + DateTime["getFormattedDate"]();
+     result += '打印时间：' + dateTime.getFormattedDate();
      result += '\n----------------------\n';
   billInputs.forEach(function(val) {
     result += '名称：' + val.getName() + '，' +
